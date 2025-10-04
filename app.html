@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Gestión Empresarial</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <h2>Menú de Gestión</h2>
+            <div id="buttonContainer">
+                </div>
+            <button id="logoutBtn" class="logout-btn">Cerrar Sesión</button>
+        </aside>
+
+        <main class="content-area" id="contentArea">
+            <div id="interface-0" class="interface active">
+                <h2>Panel Principal</h2>
+                <p>Usa el menú lateral para acceder a la gestión de las 13 tablas.</p>
+            </div>
+
+            <div id="interface-2" class="interface" data-table="departamentos">
+                <h3>Gestión de Departamentos</h3>
+                <button class="crud-button create-button" data-table="departamentos">Crear Nuevo Departamento</button>
+                <div id="form-container-departamentos" class="crud-form-container">
+                    <h4>Formulario de Departamento</h4>
+                    <form id="form-departamentos" data-table="departamentos">
+                        <input type="hidden" id="departamentos-id">
+                        <label>Nombre:</label><input type="text" id="departamentos-nombre" required>
+                        <label>Descripción:</label><textarea id="departamentos-descripcion"></textarea>
+                        <label>Estado:</label>
+                        <select id="departamentos-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option><option value="eliminado">Eliminado</option></select>
+                        <button type="submit">Guardar</button>
+                        <button type="button" class="cancel-button">Cancelar</button>
+                    </form>
+                </div>
+                <table class="crud-table"><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="table-body-departamentos"></tbody></table>
+            </div>
+
+            <div id="interface-3" class="interface" data-table="cargos">
+                <h3>Gestión de Cargos</h3>
+                <button class="crud-button create-button" data-table="cargos">Crear Nuevo Cargo</button>
+                <div id="form-container-cargos" class="crud-form-container">
+                    <h4>Formulario de Cargo</h4>
+                    <form id="form-cargos" data-table="cargos">
+                        <input type="hidden" id="cargos-id">
+                        <label>Nombre:</label><input type="text" id="cargos-nombre" required>
+                        <label>Descripción:</label><textarea id="cargos-descripcion"></textarea>
+                        <label>Salario Base:</label><input type="number" step="0.01" id="cargos-salario_base" required>
+                        <label>ID Departamento:</label><input type="number" id="cargos-id_departamento" required>
+                        <label>Estado:</label>
+                        <select id="cargos-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option><option value="eliminado">Eliminado</option></select>
+                        <button type="submit">Guardar</button>
+                        <button type="button" class="cancel-button">Cancelar</button>
+                    </form>
+                </div>
+                <table class="crud-table"><thead><tr><th>ID</th><th>Nombre</th><th>Salario Base</th><th>Depto ID</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="table-body-cargos"></tbody></table>
+            </div>
+
+            <div id="interface-4" class="interface" data-table="empleados">
+                <h3>Gestión de Empleados</h3>
+                <button class="crud-button create-button" data-table="empleados">Crear Nuevo Empleado</button>
+                <div id="form-container-empleados" class="crud-form-container">
+                    <h4>Formulario de Empleado</h4>
+                    <form id="form-empleados" data-table="empleados">
+                        <input type="hidden" id="empleados-id">
+                        <label>Nombre:</label><input type="text" id="empleados-nombre" required>
+                        <label>Apellido:</label><input type="text" id="empleados-apellido" required>
+                        <label>Correo:</label><input type="email" id="empleados-correo">
+                        <label>Fecha Ingreso:</label><input type="date" id="empleados-fecha_ingreso" required>
+                        <label>ID Cargo:</label><input type="number" id="empleados-id_cargo" required>
+                        <label>Salario Actual:</label><input type="number" step="0.01" id="empleados-salario_actual" required>
+                        <label>Estado:</label>
+                        <select id="empleados-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option><option value="eliminado">Eliminado</option></select>
+                        <button type="submit">Guardar</button>
+                        <button type="button" class="cancel-button">Cancelar</button>
+                    </form>
+                </div>
+                <table class="crud-table"><thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Cargo ID</th><th>Salario</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="table-body-empleados"></tbody></table>
+            </div>
+            
+            <div id="interface-14" class="interface" data-table="actividades">
+                <h3>Log de Actividades</h3>
+                <button class="crud-button create-button" data-table="actividades">Registrar Actividad Manual</button>
+                <div id="form-container-actividades" class="crud-form-container">
+                    <h4>Formulario de Actividad</h4>
+                    <form id="form-actividades" data-table="actividades">
+                        <input type="hidden" id="actividades-id">
+                        <label>Descripción:</label><input type="text" id="actividades-descripcion" required>
+                        <label>Responsable:</label><input type="text" id="actividades-responsable" required>
+                        <label>Fecha:</label><input type="date" id="actividades-fecha" required>
+                        <button type="submit">Guardar</button>
+                        <button type="button" class="cancel-button">Cancelar</button>
+                    </form>
+                </div>
+                <table class="crud-table"><thead><tr><th>ID</th><th>Descripción</th><th>Responsable</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="table-body-actividades"></tbody></table>
+            </div>
+
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>

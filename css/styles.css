@@ -1,0 +1,213 @@
+/* Estilos Globales y de Login */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+input[type="text"], input[type="password"], .login-container button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.login-container button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    display: none; /* Oculto por defecto */
+}
+
+/* --- Estilos de la Aplicación Principal --- */
+.app-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50; /* Color oscuro para el menú */
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #34495e;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#buttonContainer button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background-color: #34495e;
+    color: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#buttonContainer button:hover, #buttonContainer button.active {
+    background-color: #1abc9c; /* Color de realce */
+}
+
+.logout-btn {
+    margin-top: auto; /* Mueve el botón al fondo */
+    background-color: #e74c3c !important;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.content-area {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: white;
+    overflow-y: auto;
+}
+
+/* Lógica clave de SPA: Ocultar todas las interfaces por defecto */
+.interface {
+    display: none;
+    /* Puedes añadir estilos distintos para cada interfaz aquí o en sus propios divs */
+}
+
+/* Mostrar solo la interfaz con la clase 'active' */
+.interface.active {
+    display: block;
+}
+
+/*Estilos adicionales
+/* Estilos para el CRUD */
+
+.crud-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.create-button {
+    background-color: #2ecc71; /* Verde */
+    color: white;
+}
+
+.crud-form-container {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none; /* Oculto por defecto */
+}
+
+.crud-form-container label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.crud-form-container input[type="text"],
+.crud-form-container input[type="email"],
+.crud-form-container input[type="password"],
+.crud-form-container select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.crud-form-container button[type="submit"] {
+    background-color: #3498db; /* Azul */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.cancel-button {
+    background-color: #95a5a6;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Estilos de tabla */
+.crud-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.crud-table th, .crud-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.crud-table th {
+    background-color: #f2f2f2;
+}
+
+.edit-button {
+    background-color: #f39c12; /* Naranja */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.delete-button {
+    background-color: #e74c3c; /* Rojo */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Estilos para el estado */
+.status-activo { color: green; font-weight: bold; }
+.status-inactivo { color: orange; }
+.status-eliminado { color: red; }
