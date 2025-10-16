@@ -94,6 +94,9 @@ function saveRecord(tableName, recordData) {
         dataToSave[key] = convertValue(key, recordData[key]);
     }
     
+    if (!dataToSave.id || dataToSave.id === '' || isNaN(dataToSave.id)) {
+    delete dataToSave.id; // Elimina el id vacío antes de crear
+}
     // 2. CREATE o UPDATE
     if (dataToSave.id && dataToSave.id > 0) { 
         // UPDATE (Actualizar) - dataToSave.id ya es número
@@ -139,6 +142,8 @@ function deleteRecord(tableName, id) {
 
 function renderTable(tableName) {
     const records = getRecords(tableName);
+    console.log(records);
+    
     const tableBody = document.getElementById(`table-body-${tableName}`);
     const config = Object.values(TABLE_CONFIGS).find(c => c.name === tableName);
     
@@ -225,6 +230,8 @@ function setupEventListeners() {
         if (!button) return; 
 
         const id = button.dataset.id; // ID como string
+        console.log("id:" , button);
+        
         const tableName = button.dataset.table;
 
         if (button.classList.contains('delete-button')) {
