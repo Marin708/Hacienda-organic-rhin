@@ -4,23 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Gestión Empresarial</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css"> 
 </head>
 <body>
-    <div class="login-container">
-        <h2>Acceso al Sistema</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" value="admin" required>
+    <div class="login-layout">
+        <div class="login-panel">
+            <div class="header-login">
+                <span class="logo">GE-ERP</span>
+                <div class="lang-flag">🇨🇴</div> 
             </div>
-            <div class="input-group">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" value="1234" required>
+
+            <div class="login-content">
+                <h2>Good Morning!</h2>
+                <p class="subtitle-login">Por favor, ingresa tu Usuario y Contraseña para acceder al sistema.</p>
+                
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" value="admin" placeholder="Ingresa tu nombre de usuario" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" value="1234" placeholder="Ingresa tu contraseña" required>
+                    </div>
+                    
+                    <div class="links-group">
+                        <a href="#" class="forgot-password">¿Olvidaste la contraseña?</a>
+                    </div>
+
+                    <button type="submit" class="login-btn-custom">Login</button>
+                    
+                    <p id="message" class="error-message"></p>
+                </form>
             </div>
-            <button type="submit">Ingresar</button>
-            <p id="message" class="error-message"></p>
-        </form>
+            
+            <p class="support-text">
+                ¿Necesitas ayuda? 
+                <a href="mailto:support@empresa.com">Escribe a nuestro equipo de soporte.</a>
+            </p>
+        </div>
+
+        <div class="visual-panel">
+            <div class="visual-card">
+                <h3>Gestión Empresarial ERP</h3>
+                <p>Tu solución todo en uno para el manejo de recursos humanos, inventario y ventas.</p>
+            </div>
+        </div>
     </div>
     <script src="js/login.js"></script>
 </body>

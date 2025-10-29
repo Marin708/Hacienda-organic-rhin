@@ -1,304 +1,388 @@
-// js/app.js - CÓDIGO FUNCIONAL DEFINITIVO (ID, EDITAR, ELIMINAR CORREGIDOS)
+/*
+ * ========================================================
+ * CONFIGURACIÓN DE TABLAS Y NAVEGACIÓN
+ * ========================================================
+ */
 
-// ===============================================
-// LÓGICA DE NAVEGACIÓN
-// ===============================================
-
-function checkSession() {
-    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-        window.location.href = 'index.html';
-    }
-}
-
-function showInterface(targetId) {
-    document.querySelectorAll('.interface').forEach(el => el.classList.remove('active'));
-    const targetInterface = document.getElementById(targetId);
-    if (targetInterface) {
-        targetInterface.classList.add('active');
-        const tableName = targetInterface.getAttribute('data-table');
-        if (tableName) {
-            renderTable(tableName);
-        }
-    }
-    document.querySelectorAll('#buttonContainer button').forEach(btn => btn.classList.remove('active'));
-    const activeButton = document.querySelector(`button[data-target="${targetId}"]`);
-    if (activeButton) {
-        activeButton.classList.add('active');
-    }
-}
-
-// ===============================================
-// MAPEADO DE TABLAS Y CONFIGURACIÓN
-// ===============================================
-
+// Define la configuración para cada tabla: nombre visible, campos, y la clave primaria
 const TABLE_CONFIGS = {
-    'interface-2': { name: 'departamentos', title: 'Departamentos', fields: ['id', 'nombre', 'descripcion', 'estado'] },
-    'interface-3': { name: 'cargos', title: 'Cargos', fields: ['id', 'nombre', 'salario_base', 'id_departamento', 'estado'] },
-    'interface-4': { name: 'empleados', title: 'Empleados', fields: ['id', 'nombre', 'apellido', 'id_cargo', 'salario_actual', 'estado'] },
-    'interface-5': { name: 'asistencia', title: 'Asistencia', fields: ['id', 'id_empleado', 'fecha', 'hora_entrada', 'hora_salida', 'estado'] },
-    'interface-6': { name: 'nomina', title: 'Nómina', fields: ['id', 'id_empleado', 'periodo_inicio', 'periodo_fin', 'total_neto', 'estado'] },
-    'interface-7': { name: 'tipos_producto', title: 'Tipos Producto', fields: ['id', 'nombre', 'categoria', 'unidad_medida', 'estado'] },
-    'interface-8': { name: 'productos', title: 'Productos', fields: ['id', 'nombre', 'id_tipo_producto', 'precio_unitario', 'stock_actual', 'estado'] },
-    'interface-9': { name: 'proveedores', title: 'Proveedores', fields: ['id', 'nombre', 'contacto', 'telefono', 'ruc_nit', 'estado'] },
-    'interface-10': { name: 'recolecta', title: 'Recolecta', fields: ['id', 'id_producto', 'id_proveedor', 'cantidad', 'total', 'fecha', 'estado'] },
-    'interface-11': { name: 'clientes', title: 'Clientes', fields: ['id', 'nombre', 'apellido', 'telefono', 'tipo_cliente', 'estado'] },
-    'interface-12': { name: 'ventas', title: 'Ventas', fields: ['id', 'id_cliente', 'id_producto', 'cantidad', 'total', 'fecha', 'estado'] },
-    'interface-13': { name: 'inventario', title: 'Inventario', fields: ['id', 'id_producto', 'tipo_movimiento', 'cantidad', 'fecha', 'responsable'] },
-    'interface-14': { name: 'actividades', title: 'Log Actividades', fields: ['id', 'descripcion', 'responsable', 'fecha'] },
+    // Índice 2
+    departamentos: { 
+        title: "Departamentos", 
+        fields: ['id', 'nombre', 'descripcion', 'estado'],
+        pk: 'id' // Primary Key
+    },
+    // Índice 3
+    cargos: { 
+        title: "Cargos", 
+        fields: ['id', 'nombre', 'salario_base', 'id_departamento', 'estado'],
+        pk: 'id'
+    },
+    // Índice 4
+    empleados: { 
+        title: "Empleados", 
+        fields: ['id', 'nombre', 'apellido', 'id_cargo', 'salario_actual', 'estado'],
+        pk: 'id'
+    },
+    // Índice 5
+    asistencia: { 
+        title: "Asistencia", 
+        fields: ['id', 'id_empleado', 'fecha', 'hora_entrada', 'hora_salida', 'estado'],
+        pk: 'id'
+    },
+    // Índice 6
+    nomina: { 
+        title: "Nómina", 
+        fields: ['id', 'id_empleado', 'periodo_inicio', 'periodo_fin', 'total_neto', 'estado'],
+        pk: 'id'
+    },
+    // Índice 7
+    tipos_producto: { 
+        title: "Tipos Producto", 
+        fields: ['id', 'nombre', 'categoria', 'unidad_medida', 'estado'],
+        pk: 'id'
+    },
+    // Índice 8
+    productos: { 
+        title: "Productos", 
+        fields: ['id', 'nombre', 'id_tipo_producto', 'precio_unitario', 'stock_actual', 'estado'],
+        pk: 'id'
+    },
+    // Índice 9
+    proveedores: { 
+        title: "Proveedores", 
+        fields: ['id', 'nombre', 'contacto', 'telefono', 'ruc_nit', 'estado'],
+        pk: 'id'
+    },
+    // Índice 10
+    recolecta: { 
+        title: "Recolecta (Compras)", 
+        fields: ['id', 'id_producto', 'id_proveedor', 'cantidad', 'total', 'fecha', 'estado'],
+        pk: 'id'
+    },
+    // Índice 11
+    clientes: { 
+        title: "Clientes", 
+        fields: ['id', 'nombre', 'apellido', 'telefono', 'tipo_cliente', 'estado'],
+        pk: 'id'
+    },
+    // Índice 12
+    ventas: { 
+        title: "Ventas", 
+        fields: ['id', 'id_cliente', 'id_producto', 'cantidad', 'total', 'fecha', 'estado'],
+        pk: 'id'
+    },
+    // Índice 13
+    inventario: { 
+        title: "Inventario", 
+        fields: ['id', 'id_producto', 'tipo_movimiento', 'cantidad', 'fecha', 'responsable'],
+        pk: 'id'
+    },
+    // Índice 14
+    actividades: { 
+        title: "Log Actividades", 
+        fields: ['id', 'descripcion', 'responsable', 'fecha'],
+        pk: 'id'
+    }
 };
 
-// ===============================================
-// FUNCIÓN AUXILIAR DE CONVERSIÓN DE TIPO DE DATO
-// ===============================================
-function convertValue(key, value) {
-    const NUMERIC_KEYS = [
-        'id', 'id_departamento', 'id_cargo', 'id_empleado', 'id_producto', 'id_proveedor', 'id_cliente', 
-        'salario_base', 'salario_actual', 'total_neto', 'precio_unitario', 'stock_actual', 'stock_minimo',
-        'cantidad', 'total', 'descuento' 
-    ];
-    
-    // Convertimos solo si el valor no está vacío
-    if (NUMERIC_KEYS.includes(key) && value !== '' && value !== null && value !== undefined) {
-        if (key.startsWith('id')) {
-            // IDs siempre enteros
-            return parseInt(value);
-        }
-        // Valores con decimales
-        return parseFloat(value);
+// Lista de botones a generar en el sidebar
+const NAV_BUTTONS = [
+    { targetId: 'interface-2', label: 'Departamentos', tableName: 'departamentos' },
+    { targetId: 'interface-3', label: 'Cargos', tableName: 'cargos' },
+    { targetId: 'interface-4', label: 'Empleados', tableName: 'empleados' },
+    { targetId: 'interface-5', label: 'Asistencia', tableName: 'asistencia' },
+    { targetId: 'interface-6', label: 'Nómina', tableName: 'nomina' },
+    { targetId: 'interface-7', label: 'Tipos Producto', tableName: 'tipos_producto' },
+    { targetId: 'interface-8', label: 'Productos', tableName: 'productos' },
+    { targetId: 'interface-9', label: 'Proveedores', tableName: 'proveedores' },
+    { targetId: 'interface-10', label: 'Recolecta (Compras)', tableName: 'recolecta' },
+    { targetId: 'interface-11', label: 'Clientes', tableName: 'clientes' },
+    { targetId: 'interface-12', label: 'Ventas', tableName: 'ventas' },
+    { targetId: 'interface-13', label: 'Inventario', tableName: 'inventario' },
+    { targetId: 'interface-14', label: 'Actividades', tableName: 'actividades' }
+];
+
+/*
+ * ========================================================
+ * LÓGICA DE SESIÓN Y NAVEGACIÓN
+ * ========================================================
+ */
+
+function checkSession() {
+    // CRÍTICO: Si no hay token, redirigir al login
+    if (!localStorage.getItem('userToken')) {
+        window.location.href = 'index.html';
     }
-    return value;
 }
 
-
-// ===============================================
-// LÓGICA DE CRUD GENÉRICA (Local Storage)
-// ===============================================
-
-function getRecords(tableName) {
-    const data = localStorage.getItem(tableName);
-    return data ? JSON.parse(data) : [];
+function logout() {
+    localStorage.removeItem('userToken');
+    window.location.href = 'index.html';
 }
 
-function saveRecords(tableName, records) {
-    localStorage.setItem(tableName, JSON.stringify(records));
-}
-
-function saveRecord(tableName, recordData) {
-    let records = getRecords(tableName);
-    const timeStamp = new Date().toISOString();
+function setupNavigation() {
+    const container = document.getElementById('buttonContainer');
     
-    const dataToSave = {};
+    // 1. Generar los botones dinámicamente
+    NAV_BUTTONS.forEach(btnConfig => {
+        const button = document.createElement('button');
+        button.textContent = btnConfig.label;
+        button.dataset.target = btnConfig.targetId;
+        button.dataset.tableName = btnConfig.tableName;
 
-    // 1. Recolectar y CONVERTIR datos del formulario
-    for (const key in recordData) {
-        dataToSave[key] = convertValue(key, recordData[key]);
-    }
-    
-    if (!dataToSave.id || dataToSave.id === '' || isNaN(dataToSave.id)) {
-    delete dataToSave.id; // Elimina el id vacío antes de crear
-}
-    // 2. CREATE o UPDATE
-    if (dataToSave.id && dataToSave.id > 0) { 
-        // UPDATE (Actualizar) - dataToSave.id ya es número
-        const index = records.findIndex(r => r.id === dataToSave.id);
-        if (index !== -1) {
-            records[index] = { ...records[index], ...dataToSave, editado_en: timeStamp };
-        }
-    } else {
-        // CREATE (Crear)
-        
-        // CRÍTICO: CÁLCULO DE MAX ID SEGURO
-        const existingIds = records.map(r => r.id).filter(id => typeof id === 'number' && !isNaN(id) && id !== null);
-
-        const maxId = existingIds.length > 0 
-            ? Math.max(...existingIds) 
-            : 0;
-            
-        const newId = maxId + 1;
-        
-        records.push({ 
-            id: newId, 
-            ...dataToSave, 
-            creado_en: timeStamp, 
-            editado_en: timeStamp 
+        button.addEventListener('click', () => {
+            showInterface(btnConfig.targetId, btnConfig.tableName);
         });
+        container.appendChild(button);
+    });
+
+    // 2. Manejar el botón de Dashboard Principal
+    const dashboardButton = container.querySelector('[data-target="interface-0"]');
+    if (dashboardButton) {
+        dashboardButton.addEventListener('click', () => {
+            showInterface('interface-0', 'dashboard');
+        });
+        // Marcar el dashboard como activo al inicio
+        dashboardButton.classList.add('active');
+    }
+    
+    // 3. Configurar el botón de Logout
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+}
+
+function showInterface(targetId, tableName) {
+    // Ocultar todas las interfaces
+    document.querySelectorAll('.interface').forEach(el => {
+        el.classList.remove('active');
+    });
+
+    // Mostrar la interfaz objetivo
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+        targetElement.classList.add('active');
     }
 
-    saveRecords(tableName, records);
-    return true;
+    // Actualizar la clase 'active' en los botones de navegación
+    document.querySelectorAll('#buttonContainer button').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.target === targetId) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Cargar los datos de la tabla si no es el dashboard
+    if (tableName && tableName !== 'dashboard') {
+        loadData(tableName);
+    }
 }
 
-function deleteRecord(tableName, id) {
-    let records = getRecords(tableName);
-    // CRUCIAL: Convertimos el ID del botón (string) a número entero para la comparación.
-    records = records.filter(r => r.id !== parseInt(id)); 
-    saveRecords(tableName, records);
+/*
+ * ========================================================
+ * LÓGICA GENÉRICA CRUD CON LOCAL STORAGE
+ * ========================================================
+ */
+
+function loadData(tableName) {
+    const data = JSON.parse(localStorage.getItem(tableName)) || [];
+    renderTable(tableName, data);
 }
 
+function renderTable(tableName, data) {
+    const tbody = document.getElementById(`table-body-${tableName}`);
+    if (!tbody) return;
 
-// ===============================================
-// RENDERIZADO DE TABLAS Y MANEJO DE EVENTOS
-// ===============================================
+    tbody.innerHTML = ''; 
+    const config = TABLE_CONFIGS[tableName];
 
-function renderTable(tableName) {
-    const records = getRecords(tableName);
-    console.log(records);
-    
-    const tableBody = document.getElementById(`table-body-${tableName}`);
-    const config = Object.values(TABLE_CONFIGS).find(c => c.name === tableName);
-    
-    if (!tableBody || !config) return;
+    data.forEach(item => {
+        const row = tbody.insertRow();
 
-    tableBody.innerHTML = ''; 
-
-    records.forEach(record => {
-        const row = tableBody.insertRow();
-        
         config.fields.forEach(field => {
             const cell = row.insertCell();
-            let value = record[field] !== undefined ? record[field] : '';
+            let value = item[field];
             
-            // Asignamos el valor. Para el ID, 'value' es el número.
-            cell.textContent = value; 
-            
-            // Aplicar formato de decimales solo a campos que lo requieren
-            if (field !== 'id' && typeof value === 'number' && (field.includes('salario') || field.includes('precio') || field.includes('total') || field.includes('cantidad'))) {
-                 cell.textContent = value.toFixed(2);
-            }
-            
-            // Estilos para el estado
-            if (field === 'estado' || field === 'estado_registro') {
-                cell.innerHTML = `<span class="status-${value}">${value}</span>`;
+            // Lógica para aplicar el estilo de estado
+            if (field === 'estado') {
+                const statusClass = `status-${value.toLowerCase().replace(/\s/g, '')}`;
+                cell.innerHTML = `<span class="${statusClass}">${value}</span>`;
+            } else {
+                // Formatear valor (ej: salario/total)
+                if (typeof value === 'number' && (field.includes('salario') || field.includes('total') || field.includes('precio'))) {
+                    value = `$${value.toFixed(2)}`;
+                } else if (field.includes('fecha') && value) {
+                    value = new Date(value).toLocaleDateString('es-CO');
+                }
+                cell.textContent = value;
             }
         });
-        
-        // Columna de Acciones
-        const actionsCell = row.insertCell();
-        // Los botones toman el ID de 'record.id', que es el valor numérico guardado.
-        actionsCell.innerHTML = `
-            <button class="edit-button" data-id="${record.id}" data-table="${tableName}">Editar</button>
-            <button class="delete-button" data-id="${record.id}" data-table="${tableName}">Eliminar</button>
+
+        // Celda de Acciones (Editar/Eliminar)
+        const actionCell = row.insertCell();
+        actionCell.innerHTML = `
+            <button class="edit-button" data-id="${item[config.pk]}" data-table="${tableName}">Editar</button>
+            <button class="delete-button" data-id="${item[config.pk]}" data-table="${tableName}">Eliminar</button>
         `;
+    });
+    
+    setupActionListeners(tableName);
+}
+
+function setupActionListeners(tableName) {
+    const tableElement = document.getElementById(`table-body-${tableName}`);
+    if (!tableElement) return;
+
+    // Listeners para Editar
+    tableElement.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            editItem(tableName, e.target.dataset.id);
+        });
+    });
+
+    // Listeners para Eliminar
+    tableElement.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            if (confirm(`¿Está seguro de eliminar el registro ID ${e.target.dataset.id} de ${tableName}?`)) {
+                deleteItem(tableName, e.target.dataset.id);
+            }
+        });
     });
 }
 
+function editItem(tableName, id) {
+    const data = JSON.parse(localStorage.getItem(tableName)) || [];
+    const config = TABLE_CONFIGS[tableName];
+    const item = data.find(i => String(i[config.pk]) === String(id));
 
-function setupEventListeners() {
-    // 1. Manejo Genérico del Formulario (CREATE/UPDATE)
-    document.querySelectorAll('.crud-form-container form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const tableName = form.getAttribute('data-table');
-            const recordData = {};
-            
-            Array.from(form.elements).forEach(el => {
-                if (el.id && el.name !== 'password-confirm' && el.type !== 'submit' && el.type !== 'button') {
-                    const key = el.id.replace(`${tableName}-`, ''); 
-                    recordData[key] = el.value;
-                }
-            });
-            
-            saveRecord(tableName, recordData);
-            form.closest('.crud-form-container').style.display = 'none';
-            form.reset();
-            renderTable(tableName);
-        });
-    });
+    if (!item) return;
+    
+    const formContainer = document.getElementById(`form-container-${tableName}`);
+    const form = document.getElementById(`form-${tableName}`);
+    
+    formContainer.style.display = 'block';
 
-    // 2. Manejo Genérico de Botones (Crear/Cancelar)
-    document.querySelectorAll('.crud-button.create-button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const tableName = btn.getAttribute('data-table');
-            const formContainer = document.getElementById(`form-container-${tableName}`);
-            document.getElementById(`form-${tableName}`).reset();
-            document.getElementById(`${tableName}-id`).value = ''; 
-            formContainer.style.display = 'block';
-        });
-    });
-
-    document.querySelectorAll('.cancel-button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            btn.closest('.crud-form-container').style.display = 'none';
-        });
-    });
-
-
-    // 3. Manejo Genérico de Botones de Tabla (EDIT/DELETE)
-    document.getElementById('contentArea').addEventListener('click', function(e) {
-        const button = e.target.closest('.delete-button, .edit-button');
-        
-        if (!button) return; 
-
-        const id = button.dataset.id; // ID como string
-        console.log("id:" , button);
-        
-        const tableName = button.dataset.table;
-
-        if (button.classList.contains('delete-button')) {
-            // DELETE (Llama a deleteRecord que usa parseInt(id))
-            if (confirm(`¿Estás seguro de eliminar el registro ID ${id} de la tabla ${tableName}?`)) {
-                deleteRecord(tableName, id); 
-                renderTable(tableName);
+    // Rellenar todos los campos del formulario
+    config.fields.forEach(field => {
+        const input = document.getElementById(`${tableName}-${field}`);
+        if (input) {
+            // Manejo especial para fechas
+            if (input.type === 'date' && item[field]) {
+                 input.value = String(item[field]).split('T')[0];
+            } else {
+                input.value = item[field] || '';
             }
-        } else if (button.classList.contains('edit-button')) {
-            // EDIT (Llama a getRecords y busca el registro con parseInt(id))
-            const record = getRecords(tableName).find(r => r.id === parseInt(id)); 
-            if (!record) return;
+        }
+    });
+}
 
-            const formContainer = document.getElementById(`form-container-${tableName}`);
-            const form = document.getElementById(`form-${tableName}`);
-            
-            // Cargar ID
-            document.getElementById(`${tableName}-id`).value = record.id;
-            
-            // Cargar campos
-            Array.from(form.elements).forEach(el => {
-                const fieldName = el.id.replace(`${tableName}-`, '');
-                if (record[fieldName] !== undefined) {
-                    const value = record[fieldName];
-                    
-                    if (el.type === 'date' && value) {
-                        el.value = value.substring(0, 10);
-                    } else if (el.type === 'number' || el.tagName === 'SELECT') {
-                        el.value = (typeof value === 'number') ? value.toString() : value;
-                    } else {
-                        el.value = value;
-                    }
-                }
-            });
-            
+function deleteItem(tableName, id) {
+    let data = JSON.parse(localStorage.getItem(tableName)) || [];
+    const config = TABLE_CONFIGS[tableName];
+
+    data = data.filter(item => String(item[config.pk]) !== String(id));
+    
+    localStorage.setItem(tableName, JSON.stringify(data));
+    loadData(tableName);
+}
+
+function setupCreateButton(tableName) {
+    const createButton = document.querySelector(`.crud-button.create-button[data-table="${tableName}"]`);
+    const formContainer = document.getElementById(`form-container-${tableName}`);
+    const form = document.getElementById(`form-${tableName}`);
+
+    if (createButton) {
+        createButton.addEventListener('click', () => {
+            form.reset(); 
+            const idField = document.getElementById(`${tableName}-${TABLE_CONFIGS[tableName].pk}`);
+            if(idField) idField.value = ''; 
             formContainer.style.display = 'block';
+        });
+    }
+}
+
+function setupFormListeners(tableName) {
+    const form = document.getElementById(`form-${tableName}`);
+    const formContainer = document.getElementById(`form-container-${tableName}`);
+    const cancelButton = form ? form.querySelector('.cancel-button') : null;
+
+    if (form) {
+        form.addEventListener('submit', (e) => handleFormSubmit(e, tableName));
+    }
+    
+    if (cancelButton) {
+        cancelButton.addEventListener('click', () => {
+            formContainer.style.display = 'none';
+            form.reset();
+        });
+    }
+}
+
+function handleFormSubmit(e, tableName) {
+    e.preventDefault();
+    
+    const config = TABLE_CONFIGS[tableName];
+    let data = JSON.parse(localStorage.getItem(tableName)) || [];
+    const formContainer = document.getElementById(`form-container-${tableName}`);
+    const form = document.getElementById(`form-${tableName}`);
+    const idField = document.getElementById(`${tableName}-${config.pk}`);
+    const itemId = idField ? idField.value : null;
+
+    let newItem = {};
+
+    // Recoger los valores del formulario
+    config.fields.forEach(field => {
+        const input = document.getElementById(`${tableName}-${field}`);
+        if (input) {
+            if (input.type === 'number') {
+                newItem[field] = parseFloat(input.value) || 0;
+            } else {
+                newItem[field] = input.value;
+            }
         }
     });
 
-    // 4. Manejo del Cierre de Sesión
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('isLoggedIn');
-        window.location.href = 'index.html';
+    if (itemId) {
+        // Lógica de Edición
+        data = data.map(item => {
+            if (String(item[config.pk]) === String(itemId)) {
+                return newItem;
+            }
+            return item;
+        });
+    } else {
+        // Lógica de Creación: Generar nuevo ID
+        const newId = data.length > 0 ? Math.max(...data.map(item => item[config.pk])) + 1 : 1;
+        newItem[config.pk] = newId;
+        data.push(newItem);
+    }
+
+    // Guardar, ocultar y recargar
+    localStorage.setItem(tableName, JSON.stringify(data));
+    formContainer.style.display = 'none';
+    form.reset();
+    loadData(tableName);
+}
+
+/**
+ * Inicializa la lógica CRUD para todas las tablas.
+ */
+function setupAllCrud() {
+    Object.keys(TABLE_CONFIGS).forEach(tableName => {
+        setupCreateButton(tableName);
+        setupFormListeners(tableName);
     });
 }
 
-
-// ===============================================
-// INICIALIZACIÓN
-// ===============================================
-
-function setupApp() {
+/*
+ * ========================================================
+ * INICIALIZACIÓN
+ * ========================================================
+ */
+document.addEventListener('DOMContentLoaded', () => {
     checkSession();
-
-    const buttonContainer = document.getElementById('buttonContainer');
+    setupNavigation();
+    setupAllCrud();
     
-    Object.keys(TABLE_CONFIGS).forEach(id => {
-        const config = TABLE_CONFIGS[id];
-        const button = document.createElement('button');
-        button.textContent = config.title;
-        button.setAttribute('data-target', id);
-        button.addEventListener('click', () => showInterface(id));
-        buttonContainer.appendChild(button);
-    });
-    
-    setupEventListeners();
-    showInterface('interface-0');
-}
-
-window.onload = setupApp;
+    // Mostrar la interfaz de Dashboard al cargar la página
+    showInterface('interface-0', 'dashboard');
+});
